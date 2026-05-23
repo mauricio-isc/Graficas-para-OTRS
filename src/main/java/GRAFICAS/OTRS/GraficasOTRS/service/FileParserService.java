@@ -273,7 +273,7 @@ public class FileParserService {
     private Ticket mapRowToTicket(String[] row, Map<String, Integer> columnIndexMap) {
         Ticket ticket = new Ticket();
 
-        Integer index = columnIndexMap.get("numeroTicket");
+        Integer index = columnIndexMap.get(FIELD_NUMBER_TICKET);
         if (index != null && index < row.length) {
             ticket.setNumeroTicket(getValue(row[index]));
         }
