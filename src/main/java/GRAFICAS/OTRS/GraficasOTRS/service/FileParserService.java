@@ -12,6 +12,7 @@ import com.opencsv.CSVReaderBuilder;
 import org.slf4j.Logger;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -184,9 +185,8 @@ public class FileParserService {
         int rowNumber = 0;
         int errorsCount = 0;
 
-        try (InputStream inputStream = file.getInputStream();
-             Workbook workbook = createWorkbook(inputStream, file.getOriginalFilename())) {
-
+        try (InputStream inputStream = file.getInputStream()){
+            Workbook workbook = createWorkbook(inputStream, file.getOriginalFilename());
             Sheet sheet = workbook.getSheetAt(0);
             Row headerRow = sheet.getRow(0);
 
@@ -227,9 +227,10 @@ public class FileParserService {
     private Workbook createWorkbook(InputStream inputStream, String fileName) throws Exception {
         if (fileName.endsWith(".xlsx")) {
             return new XSSFWorkbook(inputStream);
-        } else {
+        } else if (fileName.endsWith(".xls")) {
             return new HSSFWorkbook(inputStream);
         }
+        throw new IOException("Formato");
     }
 
     private String[] getHeadersFromRow(Row headerRow) {
