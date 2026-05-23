@@ -24,17 +24,20 @@ import java.util.Map;
 public class FileParserService {
     private static final Logger log = LoggerFactory.getLogger(FileParserService.class);
 
+
     // Mapeo de columnas (alias permitidos)
     private static final Map<String, String> COLUMN_MAPPING = new HashMap<>();
 
+    private static final String FIELD_NUMBER_TICKET = "numeroTicket";
+
     static {
         // Nº Ticket - AGREGAR VARIANTES CON °
-        COLUMN_MAPPING.put("n° ticket", "numeroTicket");      // ← NUEVO
-        COLUMN_MAPPING.put("nº ticket", "numeroTicket");
-        COLUMN_MAPPING.put("numero ticket", "numeroTicket");
-        COLUMN_MAPPING.put("num ticket", "numeroTicket");
-        COLUMN_MAPPING.put("ticket", "numeroTicket");
-        COLUMN_MAPPING.put("id", "numeroTicket");
+        COLUMN_MAPPING.put("n° ticket", FIELD_NUMBER_TICKET);
+        COLUMN_MAPPING.put("nº ticket", FIELD_NUMBER_TICKET);
+        COLUMN_MAPPING.put("numero ticket", FIELD_NUMBER_TICKET);
+        COLUMN_MAPPING.put("num ticket", FIELD_NUMBER_TICKET);
+        COLUMN_MAPPING.put("ticket", FIELD_NUMBER_TICKET);
+        COLUMN_MAPPING.put("id", FIELD_NUMBER_TICKET);
 
         // Estado
         COLUMN_MAPPING.put("estado", "estado");
