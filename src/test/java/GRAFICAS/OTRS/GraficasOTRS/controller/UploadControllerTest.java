@@ -28,7 +28,7 @@ public class UploadControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private FileParserService fileParserService;
+    private FileParserService fileParserServiceTest;
     @MockBean
     private StatisticsService statisticsService;
     @MockBean
@@ -41,7 +41,7 @@ public class UploadControllerTest {
         MockMultipartFile file = new MockMultipartFile
                 ("file", "test.csv", "text/csv", "dummy".getBytes());
 
-        when(fileParserService.parseFile(any())).thenReturn(List.of( new Ticket()));
+        when(fileParserServiceTest.parseFile(any())).thenReturn(List.of( new Ticket()));
         when(statisticsService.calculateStatistics(any()))
                 .thenReturn(new StatisticsDto());
         when(chartGeneratorService.generateAllCharts(any(), any()))
@@ -60,7 +60,7 @@ public class UploadControllerTest {
         MockMultipartFile file = new MockMultipartFile
                 ("file", "test.csv", "test/csv", "dummy".getBytes());
         //ticket vacio
-        when(fileParserService.parseFile(any())).thenReturn(List.of());
+        when(fileParserServiceTest.parseFile(any())).thenReturn(List.of());
         when(statisticsService.calculateStatistics(any()))
                 .thenReturn(new StatisticsDto());
         when(chartGeneratorService.generateAllCharts(any(), any()))

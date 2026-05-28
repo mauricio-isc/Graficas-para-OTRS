@@ -15,10 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class FileParserService {
@@ -149,7 +146,8 @@ public class FileParserService {
                 log.info("Columna {}", i, headers[i]);
             }
             log.info("=======================");
-            if (headers == null) {
+
+            if (headers == null || headers.length == 0) {
                 throw new IllegalArgumentException("El archivo CSV está vacío");
             }
 
@@ -184,45 +182,53 @@ public class FileParserService {
      * Parsea archivo Excel
      */
     private List<Ticket> parseExcel(MultipartFile file) throws Exception {
+        if (file == null || file.isEmpty()){
+            throw new IllegalArgumentException("El archivo no puede ser nulo o vacío");
+        }
+
+        String filename = file.getOriginalFilename();
+        if (filename == null || file.isEmpty()){
+            throw new IllegalArgumentException("El nombre del archivo no puede estar vacio");
+        }
+
         List<Ticket> tickets = new ArrayList<>();
         int rowNumber = 0;
         int errorsCount = 0;
 
-        try (InputStream inputStream = file.getInputStream()){
-            Workbook workbook = createWorkbook(inputStream, file.getOriginalFilename());
+        try(InputStream inputStream = file.getInputStream()){
+            Workbook workbook = createWorkbook(inputStream, filename);
             Sheet sheet = workbook.getSheetAt(0);
             Row headerRow = sheet.getRow(0);
 
-            if (headerRow == null) {
-                throw new IllegalArgumentException("El archivo Excel está vacío");
+            if (headerRow == null){
+                throw new IllegalArgumentException("El archivo Excel está vacio");
             }
 
             String[] headers = getHeadersFromRow(headerRow);
             Map<String, Integer> columnIndexMap = mapColumnIndices(headers);
 
-            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+            for (int i = 1; i <= sheet.getLastRowNum(); i++ ){
                 rowNumber++;
                 Row row = sheet.getRow(i);
 
-                if (row == null) {
+                if(row == null){
                     continue;
                 }
 
-                try {
+                try{
                     Ticket ticket = mapRowToTicketExcel(row, columnIndexMap);
-                    if (ticket.getNumeroTicket() != null && !ticket.getNumeroTicket().isEmpty()) {
+                    if (ticket.getNumeroTicket() != null && !ticket.getNumeroTicket().isEmpty()){
                         tickets.add(ticket);
-                    } else {
-                        log.warn("Fila {}: Ticket sin número, ignorado", rowNumber);
+                    }else {
+                        log.warn("fila {}: Ticket sin número, ignorado", rowNumber);
                         errorsCount++;
                     }
-                } catch (Exception e) {
+                }catch (Exception e){
                     log.error("Error procesando fila {}: {}", rowNumber, e.getMessage());
                     errorsCount++;
                 }
             }
         }
-
         log.info("Excel procesado: {} tickets válidos, {} errores", tickets.size(), errorsCount);
         return tickets;
     }
@@ -243,7 +249,10 @@ public class FileParserService {
         for (int i = 0; i < cellCount; i++) {
             Cell cell = headerRow.getCell(i);
             if (cell != null) {
-                headers[i] = getCellValueAsString(cell).toLowerCase().trim();
+                headers[i] = Optional.ofNullable(getCellValueAsString(cell))
+                        .map(String::trim)
+                        .map(String::toLowerCase)
+                        .orElse("");
             }
         }
         return headers;
