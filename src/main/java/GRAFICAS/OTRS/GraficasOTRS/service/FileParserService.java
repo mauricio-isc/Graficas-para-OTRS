@@ -21,11 +21,16 @@ import java.util.*;
 public class FileParserService {
     private static final Logger log = LoggerFactory.getLogger(FileParserService.class);
 
-
-    // Mapeo de columnas (alias permitidos)
     private static final Map<String, String> COLUMN_MAPPING = new HashMap<>();
 
     private static final String FIELD_NUMBER_TICKET = "numeroTicket";
+    private static final String FIELD_STATUS= "estado";
+    private static final String FIELD_COSTUMER="cliente";
+    private static final String FIELD_COMPANY="empresa";
+    private static final String FIELD_SUBJECT="asunto";
+    private static final String FIELD_QUEUE="cola";
+    private static final String FIELD_PRIORITY="prioridad";
+    private static final String FIELD_CREATION="creacion";
 
     static {
         // Nº Ticket - AGREGAR VARIANTES CON °
@@ -37,37 +42,38 @@ public class FileParserService {
         COLUMN_MAPPING.put("id", FIELD_NUMBER_TICKET);
 
         // Estado
-        COLUMN_MAPPING.put("estado", "estado");
-        COLUMN_MAPPING.put("status", "estado");
-        COLUMN_MAPPING.put("state", "estado");
+        COLUMN_MAPPING.put(FIELD_STATUS, FIELD_STATUS);
+        COLUMN_MAPPING.put("status", FIELD_STATUS);
+        COLUMN_MAPPING.put("state", FIELD_STATUS);
 
         // Cliente
-        COLUMN_MAPPING.put("cliente", "cliente");
-        COLUMN_MAPPING.put("client", "cliente");
+        COLUMN_MAPPING.put(FIELD_COSTUMER, FIELD_COSTUMER);
+        COLUMN_MAPPING.put("client", FIELD_COSTUMER);
 
         // Empresa
-        COLUMN_MAPPING.put("empresa", "empresa");
-        COLUMN_MAPPING.put("company", "empresa");
+        COLUMN_MAPPING.put(FIELD_COMPANY, FIELD_COMPANY);
+        COLUMN_MAPPING.put("company", FIELD_COMPANY);
 
         // Asunto
-        COLUMN_MAPPING.put("asunto", "asunto");
-        COLUMN_MAPPING.put("subject", "asunto");
+        COLUMN_MAPPING.put(FIELD_SUBJECT, FIELD_SUBJECT);
+        COLUMN_MAPPING.put("subject", FIELD_SUBJECT);
 
         // Cola
-        COLUMN_MAPPING.put("cola", "cola");
-        COLUMN_MAPPING.put("queue", "cola");
+        COLUMN_MAPPING.put(FIELD_QUEUE, FIELD_QUEUE);
+        COLUMN_MAPPING.put("queue", FIELD_QUEUE);
 
         // Prioridad
-        COLUMN_MAPPING.put("prioridad", "prioridad");
-        COLUMN_MAPPING.put("priority", "prioridad");
+        COLUMN_MAPPING.put(FIELD_PRIORITY, FIELD_PRIORITY);
+        COLUMN_MAPPING.put("priority", FIELD_PRIORITY);
 
         // Creación
-        COLUMN_MAPPING.put("creación", "creacion");
-        COLUMN_MAPPING.put("creacion", "creacion");
-        COLUMN_MAPPING.put("fecha creación", "creacion");
-        COLUMN_MAPPING.put("fecha de creación", "creacion");
-        COLUMN_MAPPING.put("created at", "creacion");
-        COLUMN_MAPPING.put("fecha creacion", "creacion");
+        COLUMN_MAPPING.put(FIELD_CREATION, FIELD_CREATION);
+        COLUMN_MAPPING.put(FIELD_CREATION, FIELD_CREATION);
+
+        COLUMN_MAPPING.put("fecha creación", FIELD_CREATION);
+        COLUMN_MAPPING.put("fecha de creación", FIELD_CREATION);
+        COLUMN_MAPPING.put("created at", FIELD_CREATION);
+        COLUMN_MAPPING.put("fecha creacion", FIELD_CREATION);
 
         // Notificación Inicial
         COLUMN_MAPPING.put("notificación inicial", "notificacionInicial");
@@ -287,12 +293,12 @@ public class FileParserService {
             ticket.setNumeroTicket(getValue(row[index]));
         }
 
-        index = columnIndexMap.get("estado");
+        index = columnIndexMap.get(FIELD_STATUS);
         if (index != null && index < row.length) {
             ticket.setEstado(getValue(row[index]));
         }
 
-        index = columnIndexMap.get("cliente");
+        index = columnIndexMap.get(FIELD_COSTUMER);
         if (index != null && index < row.length) {
             ticket.setCliente(getValue(row[index]));
         }
@@ -385,17 +391,17 @@ public class FileParserService {
     private Ticket mapRowToTicketExcel(Row row, Map<String, Integer> columnIndexMap) {
         Ticket ticket = new Ticket();
 
-        Integer index = columnIndexMap.get("numeroTicket");
+        Integer index = columnIndexMap.get(FIELD_NUMBER_TICKET);
         if (index != null) {
             ticket.setNumeroTicket(getCellValueAsString(row.getCell(index)));
         }
 
-        index = columnIndexMap.get("estado");
+        index = columnIndexMap.get(FIELD_STATUS);
         if (index != null) {
             ticket.setEstado(getCellValueAsString(row.getCell(index)));
         }
 
-        index = columnIndexMap.get("cliente");
+        index = columnIndexMap.get(FIELD_COSTUMER);
         if (index != null) {
             ticket.setCliente(getCellValueAsString(row.getCell(index)));
         }
