@@ -11,15 +11,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static GRAFICAS.OTRS.GraficasOTRS.util.DateUtils.formatDate;
-
 @Service
 public class StatisticsService {
 
    private static final Logger log = LoggerFactory.getLogger(StatisticsService.class);
 
-   /**
+   /* *
     * TODO: CALCULA TODAS LAS ESTADISTICAS A PARTIR DE LA LISTA DE TICKETS
+    *  PARAM: ASD
     * */
    public StatisticsDto calculateStatistics(List<Ticket> tickets) {
        log.info("CALCULANDO ESTADISTICAS PARA {} TICKETS", tickets.size());
